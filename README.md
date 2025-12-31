@@ -123,9 +123,11 @@ ai-tech-screen/
 │   │   ├── App.tsx              # React chat UI component
 │   │   ├── index.tsx            # React entry point
 │   │   └── styles.css           # Tailwind CSS source
-│   ├── config/
-│   │   └── llm.ts               # Centralized LLM configuration
-│   ├── knowledge-base.ts        # Q&A data with embedding-based search
+│   ├── constants/
+│   │   ├── llm.ts               # LLM configuration
+│   │   └── prompt.ts            # System prompts
+│   ├── tools/
+│   │   └── kb.ts                # Knowledge base with embedding search
 │   └── server.ts                # Bun fullstack server
 ├── public/
 │   └── index.html               # HTML entry (references src files)
@@ -200,7 +202,7 @@ bun start
 
 ### Adding New Questions
 
-Edit `src/knowledge-base.ts`:
+Edit `src/tools/kb.ts`:
 
 ```typescript
 export const knowledgeBase: QAPair[] = [
@@ -228,12 +230,13 @@ const match = await findBestMatch(userQuestion, 0.7); // 0.7 = 70% similarity
 ## Bun-Specific Features Used
 
 1. **Fullstack Routes** - HTML imports + API routes in one server
-2. **Auto-Bundling** - No manual build in development
+2. **Auto-Bundling** - On-the-fly bundling in dev and production (no build step!)
 3. **Tailwind Plugin** - Processes CSS automatically via `bunfig.toml`
-4. **Hot Module Reloading** - Built-in HMR
-5. **Native TypeScript** - No transpilation needed
+4. **Hot Module Reloading** - Built-in HMR for instant updates
+5. **Native TypeScript** - No transpilation config needed
 6. **Fast Install** - Lightning-fast `bun install`
 7. **Development Mode** - `development: { hmr: true, console: true }`
+8. **Production Ready** - Same command works for dev and production
 
 ## Configuration
 
@@ -386,11 +389,11 @@ LLM_MODEL=anthropic/claude-3-opus
 ### Running in Production
 
 ```bash
-# Run the server directly (no build step needed!)
+# Run the server directly - no build step needed!
 NODE_ENV=production bun start
 ```
 
-Bun's dev server is production-ready and handles bundling on-the-fly with excellent performance.
+Bun's fullstack server is production-ready and handles bundling on-the-fly with excellent performance. The same source code runs in both development and production.
 
 ### Docker
 
@@ -408,8 +411,9 @@ CMD ["bun", "run", "src/server.ts"]
 ### Platform Deployment
 
 Works great on any platform that supports Bun:
+
 - **Fly.io**: Native Bun support
-- **Railway**: Native Bun support  
+- **Railway**: Native Bun support
 - **Render**: Native Bun support
 - **Any VPS**: Install Bun and run `bun start`
 
@@ -432,3 +436,5 @@ Built for Thoughtful AI technical assessment
 - 🤖 Dual AI Backend - OpenAI or local LM Studio
 - 🔥 Hot Reloading - Instant updates in development
 - 📦 Zero Config - Works out of the box with Bun
+- 🚀 No Build Step - Same code runs in dev and production
+- 🎯 Semantic Search - Intelligent question matching with embeddings
