@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "bun run src/server.ts",
     "build": "bun build --target=bun --production --outdir=dist src/server.ts",
-    "start": "NODE_ENV=production bun run dist/server.js"
+    "start": "NODE_ENV=production bun run dist/server.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.66",
@@ -21,6 +23,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "bun-types": "latest",
+    "prettier": "^3.7.4",
     "tailwindcss": "^4.1.18"
   }
 }

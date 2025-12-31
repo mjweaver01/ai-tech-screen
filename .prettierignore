@@ -1,0 +1,30 @@
+# Dependencies
+node_modules
+
+# Build outputs
+dist
+build
+.next
+out
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Lock files
+package-lock.json
+yarn.lock
+bun.lock
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Misc
+.DS_Store
+coverage
+.cache
+
