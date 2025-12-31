@@ -48,6 +48,7 @@ bun install
 Create a `.env` file in the project root:
 
 **Option 1: OpenAI (Cloud)**
+
 ```env
 LLM_API_KEY=sk-your-actual-openai-api-key-here
 LLM_MODEL=gpt-4.1-mini
@@ -55,6 +56,7 @@ EMBEDDING_MODEL=text-embedding-3-small
 ```
 
 **Option 2: LM Studio (Local - No API costs!)**
+
 ```env
 LLM_BASE_URL=http://localhost:1234/v1
 LLM_API_KEY=not-needed
@@ -65,6 +67,7 @@ EMBEDDING_MODEL=text-embedding-3-small  # Note: Still requires OpenAI API for em
 > **Note**: Even when using LM Studio for chat, you'll need an OpenAI API key for generating embeddings, unless you use a local embedding provider.
 
 **Option 3: Other OpenAI-Compatible Providers**
+
 ```env
 LLM_BASE_URL=https://api.groq.com/openai/v1  # Example: Groq
 LLM_API_KEY=your-groq-api-key
@@ -83,6 +86,7 @@ bun run dev
 The application will be available at: **http://localhost:3000**
 
 Bun's fullstack dev server automatically:
+
 - Bundles React + TypeScript on-the-fly
 - Processes Tailwind CSS through the plugin
 - Hot reloads on file changes
@@ -103,6 +107,7 @@ The agent has predefined answers for these topics:
 ### General Questions
 
 Ask anything else and the agent responds naturally:
+
 - "What's the weather like?"
 - "Tell me a joke"
 - "How do I learn programming?"
@@ -139,7 +144,7 @@ The app uses Bun's new fullstack dev server pattern:
 1. **HTML Import**: `import homepage from '../public/index.html'`
 2. **Routes Object**: Maps URLs to HTML files and API handlers
 3. **Auto-Bundling**: Bun scans HTML for `<script>` and `<link>` tags
-4. **On-the-Fly Processing**: 
+4. **On-the-Fly Processing**:
    - TypeScript/React → JavaScript
    - Tailwind CSS → Compiled CSS
    - All bundled and served automatically
@@ -205,8 +210,8 @@ export const knowledgeBase: QAPair[] = [
   // ... existing pairs
   {
     question: "Your new question?",
-    answer: "Your new answer."
-  }
+    answer: "Your new answer.",
+  },
 ];
 ```
 
@@ -272,6 +277,7 @@ PORT=3000                                   # Server port
 ## Troubleshooting
 
 ### Missing API Key
+
 - Create `.env` file in project root
 - Add `LLM_API_KEY` or configure your provider
 - Restart the server
@@ -282,24 +288,27 @@ PORT=3000                                   # Server port
 2. Load a model (e.g., Llama, Mistral, Phi, etc.)
 3. Start the server (Settings → Server → Start)
 4. Configure `.env`:
+
    ```env
    LLM_BASE_URL=http://localhost:1234/v1
    LLM_API_KEY=not-needed
    LLM_MODEL=qwen3-1.7b
    EMBEDDING_MODEL=text-embedding-3-small
    ```
-   
+
    > **Important**: You'll still need an OpenAI API key in `.env` for embeddings:
+
    ```env
    LLM_BASE_URL=http://localhost:1234/v1
    LLM_API_KEY=sk-your-openai-key  # For embeddings only
    LLM_MODEL=qwen3-1.7b
    EMBEDDING_MODEL=text-embedding-3-small
    ```
-   
+
 5. Run `bun run dev`
 
 **LM Studio Benefits:**
+
 - 🔒 Complete privacy (runs locally)
 - 💰 No API costs
 - ⚡ Fast responses with good hardware
@@ -307,6 +316,7 @@ PORT=3000                                   # Server port
 - 🔄 Switch models without code changes
 
 ### LM Studio Connection Issues
+
 - Verify LM Studio server is running on port 1234
 - Check model is loaded in LM Studio
 - Look at LM Studio's server logs for errors
@@ -317,6 +327,7 @@ PORT=3000                                   # Server port
 The app works with any OpenAI-compatible API:
 
 **Groq (Fast inference)**
+
 ```env
 LLM_BASE_URL=https://api.groq.com/openai/v1
 LLM_API_KEY=your-groq-api-key
@@ -324,6 +335,7 @@ LLM_MODEL=llama-3.1-70b-versatile
 ```
 
 **Together AI**
+
 ```env
 LLM_BASE_URL=https://api.together.xyz/v1
 LLM_API_KEY=your-together-api-key
@@ -331,6 +343,7 @@ LLM_MODEL=meta-llama/Llama-3-70b-chat
 ```
 
 **OpenRouter (Access to many models)**
+
 ```env
 LLM_BASE_URL=https://openrouter.ai/api/v1
 LLM_API_KEY=your-openrouter-api-key
@@ -338,10 +351,12 @@ LLM_MODEL=anthropic/claude-3-opus
 ```
 
 ### Port 3000 In Use
+
 - Stop other apps using port 3000
 - Or change port in `src/server.ts`: `port: 3001`
 
 ### Styles Not Applying
+
 - Check `bunfig.toml` exists with Tailwind plugin
 - Verify `tailwindcss` is in `package.json` devDependencies
 - Restart dev server
@@ -349,18 +364,21 @@ LLM_MODEL=anthropic/claude-3-opus
 ## Evaluation Criteria Met
 
 ### ✅ Functionality
+
 - Conversational AI interface with real-time chat
 - Semantic matching to retrieve predefined answers
 - LLM fallback for general questions
 - User-friendly, modern UI
 
 ### ✅ Code Quality
+
 - Clean, type-safe TypeScript throughout
 - Modular architecture (API, UI, knowledge base separated)
 - Modern stack: Bun fullstack server, AI SDK, React
 - Follows Bun's official patterns
 
 ### ✅ Robustness
+
 - Error handling for invalid requests
 - Graceful fallback when no match found
 - Network error handling with user feedback
@@ -379,6 +397,7 @@ NODE_ENV=production bun start
 ```
 
 This creates an optimized bundle in `dist/` with:
+
 - Minified JavaScript
 - Bundled assets with content hashes
 - Cached for fast serving
@@ -413,6 +432,7 @@ Built for Thoughtful AI technical assessment
 ---
 
 **Key Highlights:**
+
 - ⚡ Pure Bun - No webpack, no Vite, no Next.js needed
 - 🎨 Tailwind CSS v4 - Latest CSS-first approach
 - 🤖 Dual AI Backend - OpenAI or local LM Studio
