@@ -18,7 +18,7 @@ A conversational AI support agent built with Bun's fullstack dev server, React, 
 - **Modern UI**: Clean, responsive chat interface built with React and Tailwind CSS v4
 - **Streaming Responses**: Real-time streaming for natural conversation experience
 - **Hot Module Reloading**: Bun's fullstack dev server with instant updates
-- **No Build Step in Dev**: Source files served and bundled on-the-fly
+- **No Build Step**: Source files served and bundled on-the-fly in dev AND production
 
 ## Tech Stack
 
@@ -27,7 +27,7 @@ A conversational AI support agent built with Bun's fullstack dev server, React, 
 - **Frontend**: React 18 with TypeScript
 - **AI**: Vercel AI SDK with OpenAI or LM Studio
 - **Styling**: Tailwind CSS v4 (via bun-plugin-tailwind)
-- **Bundling**: Bun's native bundler (automatic in dev mode)
+- **Bundling**: Bun's native bundler (automatic, no build step)
 
 ## Prerequisites
 
@@ -191,13 +191,10 @@ Stream to Browser (SSE)
 ### Available Scripts
 
 ```bash
-# Development (no build needed!)
+# Development
 bun run dev
 
-# Production build
-bun run build
-
-# Production start
+# Production
 bun start
 ```
 
@@ -386,40 +383,37 @@ LLM_MODEL=anthropic/claude-3-opus
 
 ## Deployment
 
-### Production Build
+### Running in Production
 
 ```bash
-# Build the application
-bun run build
-
-# Run in production
+# Run the server directly (no build step needed!)
 NODE_ENV=production bun start
 ```
 
-This creates an optimized bundle in `dist/` with:
-
-- Minified JavaScript
-- Bundled assets with content hashes
-- Cached for fast serving
+Bun's dev server is production-ready and handles bundling on-the-fly with excellent performance.
 
 ### Docker
 
 ```dockerfile
-FROM oven/bun:1 as build
+FROM oven/bun:1
 WORKDIR /app
 COPY package.json bun.lockb ./
-RUN bun install
+RUN bun install --production
 COPY . .
-RUN bun run build
-
-FROM oven/bun:1-slim
-WORKDIR /app
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/public ./public
 ENV NODE_ENV=production
 EXPOSE 3000
-CMD ["bun", "dist/server.js"]
+CMD ["bun", "run", "src/server.ts"]
 ```
+
+### Platform Deployment
+
+Works great on any platform that supports Bun:
+- **Fly.io**: Native Bun support
+- **Railway**: Native Bun support  
+- **Render**: Native Bun support
+- **Any VPS**: Install Bun and run `bun start`
+
+No build step required - Bun handles everything!
 
 ## License
 
