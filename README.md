@@ -22,17 +22,17 @@ A conversational AI support agent built with Bun's fullstack dev server, React, 
 
 ## Tech Stack
 
-- **Runtime**: Bun v1.3+
-- **Backend**: Bun Fullstack Dev Server with Routes
-- **Frontend**: React 18 with TypeScript
-- **AI**: Vercel AI SDK with OpenAI or LM Studio
-- **Styling**: Tailwind CSS v4 (via bun-plugin-tailwind)
+- **Runtime**: [Bun](https://bun.sh) v1.3+
+- **Backend**: [Bun Fullstack Dev Server](https://bun.sh/docs/api/http) with Routes
+- **Frontend**: [React](https://react.dev) 18 with TypeScript
+- **AI**: [Vercel AI SDK](https://sdk.vercel.ai/docs) with [OpenAI](https://platform.openai.com/docs) or [LM Studio](https://lmstudio.ai/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com) (via [bun-plugin-tailwind](https://github.com/connordotfun/bun-plugin-tailwind))
 - **Bundling**: Bun's native bundler (automatic, no build step)
 
 ## Prerequisites
 
 - [Bun](https://bun.sh) v1.3 or higher
-- An LLM provider: OpenAI API key OR [LM Studio](https://lmstudio.ai/) running locally
+- An LLM provider: [OpenAI API key](https://platform.openai.com/api-keys) OR [LM Studio](https://lmstudio.ai/) running locally
 
 ## Quick Start
 
