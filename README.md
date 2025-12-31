@@ -4,7 +4,9 @@ A conversational AI support agent built with Bun's fullstack dev server, React, 
 
 ## Features
 
-- **Smart Question Routing**: Uses LLM function calling to match user questions against predefined knowledge base
+- **Semantic Search with Embeddings**: Uses OpenAI embeddings and cosine similarity to match user questions against the knowledge base
+- **Intelligent Matching**: Automatically finds the most relevant predefined answer based on semantic meaning, not exact text
+- **Configurable Similarity Threshold**: Adjustable threshold (default 70%) to balance precision and recall
 - **Predefined Answers**: Provides exact, curated answers for questions about EVA, CAM, PHIL, and Thoughtful AI's agents
 - **LLM Fallback**: Handles general questions naturally when not in the knowledge base
 - **Flexible AI Backend**: Works with OpenAI API or local LM Studio
@@ -49,6 +51,7 @@ Create a `.env` file in the project root:
 ```env
 LLM_API_KEY=sk-your-actual-openai-api-key-here
 LLM_MODEL=gpt-4.1-mini
+EMBEDDING_MODEL=text-embedding-3-small
 ```
 
 **Option 2: LM Studio (Local - No API costs!)**
@@ -56,16 +59,20 @@ LLM_MODEL=gpt-4.1-mini
 LLM_BASE_URL=http://localhost:1234/v1
 LLM_API_KEY=not-needed
 LLM_MODEL=qwen3-1.7b
+EMBEDDING_MODEL=text-embedding-3-small  # Note: Still requires OpenAI API for embeddings
 ```
+
+> **Note**: Even when using LM Studio for chat, you'll need an OpenAI API key for generating embeddings, unless you use a local embedding provider.
 
 **Option 3: Other OpenAI-Compatible Providers**
 ```env
 LLM_BASE_URL=https://api.groq.com/openai/v1  # Example: Groq
 LLM_API_KEY=your-groq-api-key
 LLM_MODEL=llama-3.1-70b-versatile
+EMBEDDING_MODEL=text-embedding-3-small  # Embeddings still use OpenAI
 ```
 
-> **Note**: When using LM Studio, the model name can be anything - it uses whatever model is currently loaded in LM Studio.
+> **Note**: When using LM Studio, the model name can be anything - it uses whatever model is currently loaded in LM Studio. Embeddings currently require OpenAI API or a compatible provider.
 
 ### 3. Start Development Server
 
@@ -106,12 +113,14 @@ Ask anything else and the agent responds naturally:
 ai-tech-screen/
 ├── src/
 │   ├── api/
-│   │   └── chat.ts              # Chat API handler with LLM routing
+│   │   └── chat.ts              # Chat API handler with semantic search
 │   ├── client/
 │   │   ├── App.tsx              # React chat UI component
 │   │   ├── index.tsx            # React entry point
 │   │   └── styles.css           # Tailwind CSS source
-│   ├── knowledge-base.ts        # Predefined Q&A data
+│   ├── config/
+│   │   └── llm.ts               # Centralized LLM configuration
+│   ├── knowledge-base.ts        # Q&A data with embedding-based search
 │   └── server.ts                # Bun fullstack server
 ├── public/
 │   └── index.html               # HTML entry (references src files)
@@ -136,14 +145,15 @@ The app uses Bun's new fullstack dev server pattern:
    - All bundled and served automatically
 5. **Hot Reloading**: Changes update instantly in the browser
 
-### Question Routing with LLM
+### Semantic Search with Embeddings
 
-1. User asks a question
-2. Sent to `/api/chat` endpoint
-3. LLM analyzes question with function calling
-4. If matched to predefined topic → return exact answer
-5. If not matched → LLM generates natural response
-6. Response streamed back in real-time
+1. **Initialization**: On server startup, embeddings are computed for all knowledge base questions
+2. **User Query**: User asks a question, sent to `/api/chat` endpoint
+3. **Embedding Generation**: User's question is converted to an embedding vector
+4. **Similarity Search**: Cosine similarity calculated between user embedding and all KB embeddings
+5. **Threshold Check**: If similarity > 70%, the matched answer is injected into LLM context
+6. **LLM Response**: LLM presents the KB answer naturally, or generates general response if no match
+7. **Streaming**: Response streamed back to browser in real-time
 
 ### Architecture Flow
 
@@ -155,10 +165,17 @@ Bun.serve({ routes })
 ├─ "/" → HTML (auto-bundled)
 ├─ "/api/chat" → Chat handler
     ↓
-LLM Function Calling
+┌─────────────────────────────────┐
+│  Embedding-Based Semantic Search│
+│  1. Embed user question         │
+│  2. Compare with KB embeddings  │
+│  3. Calculate cosine similarity │
+│  4. Find best match (>70%)      │
+└─────────────────────────────────┘
     ↓
 ┌─────────────────┬──────────────────┐
-│ Predefined KB   │   LLM Response   │
+│ KB Answer Found │  No Match Found  │
+│ (inject to LLM) │  (LLM fallback)  │
 └─────────────────┴──────────────────┘
     ↓
 Stream to Browser (SSE)
@@ -193,7 +210,18 @@ export const knowledgeBase: QAPair[] = [
 ];
 ```
 
-The LLM automatically handles semantic matching - no need to update enums or IDs!
+Embeddings are automatically generated on server startup - no manual configuration needed! The system uses semantic search to match user questions to the most relevant KB entry, even if worded differently.
+
+### Adjusting the Similarity Threshold
+
+In `src/api/chat.ts`, you can adjust how strict the matching is:
+
+```typescript
+const match = await findBestMatch(userQuestion, 0.7); // 0.7 = 70% similarity
+
+// Lower threshold (0.5) = more matches, less precise
+// Higher threshold (0.85) = fewer matches, more precise
+```
 
 ## Bun-Specific Features Used
 
@@ -220,19 +248,25 @@ This enables automatic Tailwind CSS processing when serving static files.
 
 ```env
 # LLM Provider Configuration (provider-agnostic)
-LLM_API_KEY=sk-...                       # API key for your provider
-LLM_BASE_URL=https://api.openai.com/v1  # API base URL
-LLM_MODEL=gpt-4o-mini                    # Model name
+LLM_API_KEY=sk-...                          # API key for your provider
+LLM_BASE_URL=https://api.openai.com/v1     # API base URL
+LLM_MODEL=gpt-4.1-mini                      # Chat model name
+EMBEDDING_MODEL=text-embedding-3-small      # Embedding model for semantic search
 
 # Examples:
-# OpenAI: LLM_BASE_URL=https://api.openai.com/v1, LLM_MODEL=gpt-4
+# OpenAI: LLM_BASE_URL=https://api.openai.com/v1, LLM_MODEL=gpt-4.1-mini
 # LM Studio: LLM_BASE_URL=http://localhost:1234/v1, LLM_MODEL=any-name
 # Groq: LLM_BASE_URL=https://api.groq.com/openai/v1, LLM_MODEL=llama-3.1-70b
 # Together: LLM_BASE_URL=https://api.together.xyz/v1, LLM_MODEL=meta-llama/Llama-3-70b
 
+# Embedding Model Options (OpenAI):
+# text-embedding-3-small  - Fast, cost-effective (default)
+# text-embedding-3-large  - Higher accuracy, more expensive
+# text-embedding-ada-002  - Legacy model
+
 # Optional:
-NODE_ENV=production                      # Disables HMR and minifies
-PORT=3000                                # Server port
+NODE_ENV=production                         # Disables HMR and minifies
+PORT=3000                                   # Server port
 ```
 
 ## Troubleshooting
@@ -252,7 +286,17 @@ PORT=3000                                # Server port
    LLM_BASE_URL=http://localhost:1234/v1
    LLM_API_KEY=not-needed
    LLM_MODEL=qwen3-1.7b
+   EMBEDDING_MODEL=text-embedding-3-small
    ```
+   
+   > **Important**: You'll still need an OpenAI API key in `.env` for embeddings:
+   ```env
+   LLM_BASE_URL=http://localhost:1234/v1
+   LLM_API_KEY=sk-your-openai-key  # For embeddings only
+   LLM_MODEL=qwen3-1.7b
+   EMBEDDING_MODEL=text-embedding-3-small
+   ```
+   
 5. Run `bun run dev`
 
 **LM Studio Benefits:**
