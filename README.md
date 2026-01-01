@@ -29,6 +29,20 @@ A conversational AI support agent built with Bun's fullstack dev server, React, 
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com) (via [bun-plugin-tailwind](https://github.com/connordotfun/bun-plugin-tailwind))
 - **Bundling**: Bun's native bundler (automatic, no build step)
 
+## Screenshots
+
+### Main Chat UI
+
+![Chat UI screenshot](./public/ss1.png)
+
+### Chat Question & Answer
+
+![Chat questino and answer](./public/ss2.png)
+
+### Knowledge Base Tool Invocation
+
+![Knowledge base tool example](./public/ss3.png)
+
 ## Prerequisites
 
 - [Bun](https://bun.sh) v1.3 or higher
