@@ -154,7 +154,7 @@ ai-tech-screen/
 
 The app uses Bun's new fullstack dev server pattern:
 
-1. **HTML Import**: `import homepage from '../public/index.html'`
+1. **HTML Import**: `import homepage from '../../public/index.html'`
 2. **Routes Object**: Maps URLs to HTML files and API handlers
 3. **Auto-Bundling**: Bun scans HTML for `<script>` and `<link>` tags
 4. **On-the-Fly Processing**:

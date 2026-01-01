@@ -1,6 +1,6 @@
 import { serve } from "bun";
 import { handleChatRequest } from "./chat";
-import homepage from "../public/index.html";
+import homepage from "../../public/index.html";
 
 const server = serve({
   port: 3000,
