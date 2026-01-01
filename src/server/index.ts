@@ -1,5 +1,5 @@
 import { serve } from "bun";
-import { handleChatRequest } from "./api/chat";
+import { handleChatRequest } from "./chat";
 import homepage from "../public/index.html";
 
 const server = serve({

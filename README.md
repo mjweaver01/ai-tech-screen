@@ -117,24 +117,35 @@ Ask anything else and the agent responds naturally:
 ```
 ai-tech-screen/
 ├── src/
-│   ├── api/
-│   │   └── chat.ts              # Chat API handler with semantic search
 │   ├── client/
-│   │   ├── App.tsx              # React chat UI component
-│   │   ├── index.tsx            # React entry point
-│   │   └── styles.css           # Tailwind CSS source
-│   ├── constants/
-│   │   ├── llm.ts               # LLM configuration
-│   │   └── prompt.ts            # System prompts
-│   ├── tools/
-│   │   └── kb.ts                # Knowledge base with embedding search
-│   └── server.ts                # Bun fullstack server
+│   │   ├── components/
+│   │   │   ├── ChatInput.tsx        # Message input with send button
+│   │   │   ├── EmptyState.tsx       # Initial welcome screen
+│   │   │   ├── ErrorMessage.tsx     # Error display component
+│   │   │   ├── Header.tsx           # App header/title
+│   │   │   ├── LoadingIndicator.tsx # Loading spinner
+│   │   │   ├── Message.tsx          # Single message display
+│   │   │   ├── MessageList.tsx      # Message container
+│   │   │   ├── ThinkingBlock.tsx    # LLM thinking indicator
+│   │   │   └── ToolInvocation.tsx   # Tool call display
+│   │   ├── types/
+│   │   │   └── chat.ts              # TypeScript types for chat
+│   │   ├── utils/
+│   │   │   └── contentParser.ts     # Markdown/content parsing
+│   │   ├── App.tsx                  # React chat UI component
+│   │   ├── index.tsx                # React entry point
+│   │   └── styles.css               # Tailwind CSS source
+│   └── server/
+│       ├── chat.ts                  # Chat API handler with semantic search
+│       ├── index.ts                 # Bun fullstack server
+│       ├── kb.ts                    # Knowledge base with embedding search
+│       └── llm.ts                   # LLM configuration
 ├── public/
-│   └── index.html               # HTML entry (references src files)
-├── bunfig.toml                  # Bun config (Tailwind plugin)
-├── package.json                 # Dependencies and scripts
-├── tsconfig.json                # TypeScript config
-└── README.md                    # This file
+│   └── index.html                   # HTML entry (references src files)
+├── bunfig.toml                      # Bun config (Tailwind plugin)
+├── package.json                     # Dependencies and scripts
+├── tsconfig.json                    # TypeScript config
+└── README.md                        # This file
 ```
 
 ## How It Works

@@ -1,5 +1,5 @@
 import { embed } from "ai";
-import { openai, embeddingModel } from "../constants/llm";
+import { openai, embeddingModel } from "./llm";
 
 export interface QAPair {
   question: string;
