@@ -147,6 +147,8 @@ function ThinkingBlock({
   );
 }
 
+const MESSAGES_STORAGE_KEY = "thoughtful-ai-messages";
+
 export default function App() {
   const {
     messages,
@@ -159,6 +161,15 @@ export default function App() {
     append,
   } = useChat({
     api: "/api/chat",
+    initialMessages: (() => {
+      try {
+        const stored = localStorage.getItem(MESSAGES_STORAGE_KEY);
+        return stored ? JSON.parse(stored) : [];
+      } catch (e) {
+        console.error("Failed to load messages from localStorage:", e);
+        return [];
+      }
+    })(),
   });
 
   const [config, setConfig] = useState<ConfigInfo | null>(null);
@@ -177,6 +188,7 @@ export default function App() {
     }
     setMessages([]);
     setExpandedThinking(new Set());
+    localStorage.removeItem(MESSAGES_STORAGE_KEY);
   };
 
   const handleQuickQuestion = (question: string) => {
@@ -197,6 +209,15 @@ export default function App() {
       return newSet;
     });
   };
+
+  // Save messages to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem(MESSAGES_STORAGE_KEY, JSON.stringify(messages));
+    } catch (e) {
+      console.error("Failed to save messages to localStorage:", e);
+    }
+  }, [messages]);
 
   // Scroll to bottom when messages change
   useEffect(() => {
